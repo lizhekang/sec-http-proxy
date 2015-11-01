@@ -35,8 +35,9 @@ function start_http_server() {
     var shasum = crypto.createHash('sha1');
     var randomstring = require('randomstring');
 
+    var server_host = config['server_host']
     var http_proxy = config['http_proxy'] | 8080;
-    console.log(' Begin to start a http server at http://127.0.0.1:%d', http_proxy);
+    console.log(' Begin to start a http server at http://%s:%d', server_host, http_proxy);
 
     http.createServer(function(req, res) {
         res.writeHead(200, {"Content-Type": "text/plain"});
@@ -70,17 +71,17 @@ function start_http_server() {
 function start_proxy() {
     var net = require("net");
     var proxyPort = config['proxy_port'] ? config['proxy_port'] : 8888;
-    var serviceHost = config['server_host'] ? config['server_host'] : '127.0.0.1';
-    var servicePort = config['server_port'] ? config['server_port'] : 7777;
+    var serverHost = config['server_host'] ? config['server_host'] : '127.0.0.1';
+    var serverPort = config['server_port'] ? config['server_port'] : 7777;
 
-    console.log(' Begin to start a proxy server at http://127.0.0.1:%d', proxyPort);
+    console.log(' Begin to start a proxy server at http://%s:%d', serverHost, proxyPort);
 
     net.createServer(function (proxySocket) {
         var connected = false;
         var buffers = new Array();
         var serviceSocket = new net.Socket();
 
-        serviceSocket.connect(parseInt(servicePort), serviceHost, function() {
+        serviceSocket.connect(parseInt(serverPort), serverHost, function() {
 
             connected = true;
             if (buffers.length > 0) {
@@ -97,7 +98,7 @@ function start_proxy() {
         });
         serviceSocket.on("error", function (e) {
             console.log("Could not connect to service at host "
-                + serviceHost + ', port ' + servicePort);
+                + serverHost + ', port ' + serverPort);
             proxySocket.end();
         });
         proxySocket.on("data", function (data) {
