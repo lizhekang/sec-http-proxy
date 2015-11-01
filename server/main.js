@@ -6,6 +6,7 @@ var crypto = require('crypto'),
     emitter = new events.EventEmitter;
 
 var key_pool = [];
+var key;
 
 // Read config file
 var config;
@@ -51,9 +52,11 @@ function start_http_server() {
         shasum.update(ip);
         var sha1_ip = shasum.digest('hex');
 
+        //TODO: using key pool
         // Check whether ip had been saved, or not save.
         var random = randomstring.generate();
         key_pool[sha1_ip] = key_pool[sha1_ip] ? key_pool[sha1_ip] : random;
+        key = key_pool[sha1_ip];
 
         res.end(key_pool[sha1_ip]);
     }).listen(http_proxy);
@@ -82,7 +85,7 @@ function start_proxy() {
             connected = true;
             if (buffers.length > 0) {
                 for (i = 0; i < buffers.length; i++) {
-                    var d = decipher('aes-256-ctr', 'test123', buffers[i]);
+                    var d = decipher('aes-256-ctr', key, buffers[i]);
                     //serviceSocket.write(buffers[i]);
                     serviceSocket.write(d);
                 }

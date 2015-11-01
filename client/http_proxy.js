@@ -7,8 +7,20 @@ var util = require('util'),
     crypto = require('crypto'),
     request = require('request');
 
+// About query function
+var query_option = {
+    "step": 1000,
+    "normal": 10000,
+    "max": 60000,
+    "min": 1000
+};
+var query_frequency = query_option.normal;
+var query_function;
+var query_tips = "";
+
 // Config
 var config;
+var key;
 
 function cipher(algorithm, key, buf ){
     var cip = crypto.createCipher(algorithm, key);
@@ -42,7 +54,7 @@ function start_local_server() {
             connected = true;
             if (buffers.length > 0) {
                 for (i = 0; i < buffers.length; i++) {
-                    var d = cipher('aes-256-ctr', 'test123', buffers[i]);   //buffers[i].toString();
+                    var d = cipher('aes-256-ctr', key, buffers[i]);   //buffers[i].toString();
                     //serviceSocket.write(buffers[i]);
                     serviceSocket.write(d);
                 }
@@ -77,25 +89,41 @@ function start_local_server() {
 
 function getServerStatus() {
     var serverStatus = server ? (server._handle ? true : false) : false;
-    return {serverStatus: serverStatus, proxyPort: config.proxy_port};
+    return {serverStatus: serverStatus, proxyPort: config['proxy_port'], tips: query_tips};
 }
 
-function getKey() {
+function initKey() {
     var serviceHost = config['service_host'] ? config['proxy_port'] : "127.0.0.1";
     var httpPort = config['http_port'] ? config['http_port'] : 8080;
     var url = 'http://' + serviceHost + ':' + httpPort;
 
     request(url, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-            console.log(body);
+            query_frequency = query_frequency < query_option.max ? query_frequency + query_option.step : query_option.max;
+            key = body;
+            query_tips = 'The key is ' + key;
         }else {
-            console.log(error);
+            query_tips = error.toString();
+            query_frequency = query_frequency > query_option.min ? query_frequency - query_option.step : query_option.min;
         }
-    })
+
+        // Reset query timer.
+        clearInterval(query_function);
+        query_function = setInterval(function() {
+            initKey();
+        }, query_frequency);
+    });
+}
+
+function getKey() {
+    return key;
 }
 
 function init(cfg) {
     config = cfg;
+
+    // Getting key
+    initKey();
 }
 
 module.exports = {

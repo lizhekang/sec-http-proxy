@@ -28,7 +28,7 @@ app.on('ready', function() {
     // Create the browser window.
     mainWindow = new BrowserWindow({
         title: 'Proxy',
-        width: 200,
+        width: 400,
         height: 250,
         'use-content-size': true,
         resizable: true

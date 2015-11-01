@@ -13,20 +13,24 @@ var ContentBox = React.createClass({
         return {serverStatus: false}
     },
     render: function() {
-        var Button;
-        var Label;
+        var StartButton;
+        var ServerStatus = <RB.Lable>Waiting for connect to the server.</RB.Lable>;
+        var Notification;
         if(!this.state.serverStatus) {
-            Label = <RB.Label>Not running.</RB.Label>
-            Button = <RB.Button bsStyle='primary' onClick={this.handleClick.bind(this, 'start_server')} >Start</RB.Button>
+            Notification = <RB.Label>Not running.</RB.Label>;
+            ServerStatus = <RB.Label>Waiting for connect to the server.</RB.Label>;
+            StartButton = <RB.Button bsStyle='primary' onClick={this.handleClick.bind(this, 'start_server')} block>Start</RB.Button>;
         }else {
-            Label = <RB.Label>Address 127.0.0.1:{this.state.proxyPort}</RB.Label>
-            Button = <RB.Button bsStyle='danger' onClick={this.handleClick.bind(this, 'stop_server')}>Stop</RB.Button>
+            Notification = <RB.Label>Address 127.0.0.1:{this.state.proxyPort}</RB.Label>;
+            ServerStatus = <RB.Label>{this.state.tips}</RB.Label>;
+            StartButton = <RB.Button bsStyle='danger' onClick={this.handleClick.bind(this, 'stop_server')} block>Stop</RB.Button>;
         }
         return (
             <RB.Panel>
                 <h3>Proxy Status</h3>
-                <p>{Label}</p>
-                {Button}
+                <p>{Notification}</p>
+                <p>{ServerStatus}</p>
+                {StartButton}
             </RB.Panel>
         );
     },
