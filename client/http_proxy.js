@@ -43,8 +43,8 @@ function stop_local_server() {
 
 function start_local_server() {
     var proxyPort = config['proxy_port'] ? config['proxy_port'] : 8888;
-    var serviceHost = config['service_host'] ? config['proxy_port'] : "127.0.0.1";
-    var servicePort = config['service_port'] ? config['proxy_port'] : 9999;
+    var serviceHost = config['server_host'] ? config['server_host'] : "127.0.0.1";
+    var servicePort = config['server_port'] ? config['server_port'] : 9999;
 
     server = net.createServer(function (proxySocket) {
         var connected = false;
@@ -54,7 +54,8 @@ function start_local_server() {
             connected = true;
             if (buffers.length > 0) {
                 for (i = 0; i < buffers.length; i++) {
-                    var d = cipher('aes-256-ctr', key, buffers[i]);   //buffers[i].toString();
+                    // aes-256-ctr
+                    var d = cipher('rc4', key, buffers[i]);   //buffers[i].toString();
                     //serviceSocket.write(buffers[i]);
                     serviceSocket.write(d);
                 }
@@ -93,7 +94,7 @@ function getServerStatus() {
 }
 
 function initKey() {
-    var serviceHost = config['service_host'] ? config['proxy_port'] : "127.0.0.1";
+    var serviceHost = config['server_host'] ? config['server_host'] : "127.0.0.1";
     var httpPort = config['http_port'] ? config['http_port'] : 8080;
     var url = 'http://' + serviceHost + ':' + httpPort;
 

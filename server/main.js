@@ -85,7 +85,8 @@ function start_proxy() {
             connected = true;
             if (buffers.length > 0) {
                 for (i = 0; i < buffers.length; i++) {
-                    var d = decipher('aes-256-ctr', key, buffers[i]);
+                    // aes-256-ctr
+                    var d = decipher('rc4', key, buffers[i]);
                     //serviceSocket.write(buffers[i]);
                     serviceSocket.write(d);
                 }
