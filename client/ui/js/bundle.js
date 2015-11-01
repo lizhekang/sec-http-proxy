@@ -62,20 +62,24 @@
 	        return {serverStatus: false}
 	    },
 	    render: function() {
-	        var Button;
-	        var Label;
+	        var StartButton;
+	        var ServerStatus = React.createElement(RB.Lable, null, "Waiting for connect to the server.");
+	        var Notification;
 	        if(!this.state.serverStatus) {
-	            Label = React.createElement(RB.Label, null, "Not running.")
-	            Button = React.createElement(RB.Button, {bsStyle: "primary", onClick: this.handleClick.bind(this, 'start_server')}, "Start")
+	            Notification = React.createElement(RB.Label, null, "Not running.");
+	            ServerStatus = React.createElement(RB.Label, null, "Waiting for connect to the server.");
+	            StartButton = React.createElement(RB.Button, {bsStyle: "primary", onClick: this.handleClick.bind(this, 'start_server'), block: true}, "Start");
 	        }else {
-	            Label = React.createElement(RB.Label, null, "Address 127.0.0.1:", this.state.proxyPort)
-	            Button = React.createElement(RB.Button, {bsStyle: "danger", onClick: this.handleClick.bind(this, 'stop_server')}, "Stop")
+	            Notification = React.createElement(RB.Label, null, "Address 127.0.0.1:", this.state.proxyPort);
+	            ServerStatus = React.createElement(RB.Label, null, this.state.tips);
+	            StartButton = React.createElement(RB.Button, {bsStyle: "danger", onClick: this.handleClick.bind(this, 'stop_server'), block: true}, "Stop");
 	        }
 	        return (
 	            React.createElement(RB.Panel, null, 
 	                React.createElement("h3", null, "Proxy Status"), 
-	                React.createElement("p", null, Label), 
-	                Button
+	                React.createElement("p", null, Notification), 
+	                React.createElement("p", null, ServerStatus), 
+	                StartButton
 	            )
 	        );
 	    },
