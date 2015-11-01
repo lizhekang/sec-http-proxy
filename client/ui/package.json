@@ -1,0 +1,19 @@
+{
+  "name": "ui",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "dalex",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^3.3.5",
+    "react-bootstrap": "^0.27.3",
+    "react-desktop": "^0.1.48"
+  },
+  "devDependencies": {
+    "jsx-loader": "^0.13.2"
+  }
+}

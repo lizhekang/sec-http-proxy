@@ -1,0 +1,9 @@
+{
+  "user": "dalex",
+  "key": "12345",
+  "cycle": 1,
+  "http_port": 8080,
+  "proxy_port": 8888,
+  "server_host": "127.0.0.1",
+  "server_port": 9999
+}

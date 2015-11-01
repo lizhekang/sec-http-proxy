@@ -1,0 +1,15 @@
+{
+  "name": "sec_http_proxy_server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "dalex",
+  "license": "ISC",
+  "dependencies": {
+    "jsonfile": "^2.2.3",
+    "randomstring": "^1.1.0"
+  }
+}
